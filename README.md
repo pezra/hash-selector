@@ -8,7 +8,7 @@ Consider a complex and deeply nested hash such as the following:
 
 ```ruby
 config =
-{ postgresql_databases: [
+{ databases: [
     { name: "myapp_production",
       user: "myapp",
       host: "db1"
@@ -24,12 +24,19 @@ config =
 Say we want to find the user name of legacy db but if we do not find it use a default value. With just the basic hash behavior this can be rather onerous. With `HashSelector` is it a breeze.
 
 ```ruby
-selector = HashSelector.new[:postgresql_databases].find{|db| db[:name] == "legacy_db"}[:user]
-selector.find_in(config) { "legacy_user" } # => "legacy_user"
+selector = HashSelector.new[:databases].find{|db| db[:name] == "myapp_production"}[:user]
+selector.find_in(config) # => "myapp"
 ```
-The selector definition line should be read as "a new selector that chooses the `:postgresql_databases` value, finds an entry in it whose name is `legacy_db`, and selects its `:user`"
+The selector definition line should be read as "a new selector that chooses the `:databases` item, finds an entry in it whose name is `myapp_production`, and selects its `:user`"
 
 If the location specified by a `HashSelector` does not exist the hash it will raise a `KeyError` unless a block is provided. If a block is provided the block will be evaluated and its return value will returned from `#find_in`.
+
+```ruby
+selector = HashSelector.new[:databases].find{|db| db[:name] == "myapp_test"}[:user]
+selector.find_in(config) { "myapp" } # => "myapp"
+```
+
+In this example, there find fails because there is not entry in `:databases` with a name of `myapp_test` so the default (`myapp`) is returned instead.
 
 `HashSelector`s are immutable and may be reused any any number of different hashes.
 
