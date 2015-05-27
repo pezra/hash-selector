@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Peter Williams"]
   spec.email         = ["pezra@barelyenough.org"]
   spec.summary       = %q{Easily select values from deep inside hierarchical hashes.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/pezra/hash-selector"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
