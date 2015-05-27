@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pezra/hash-selector.svg)](https://travis-ci.org/pezra/hash-selector)
+
 # HashSelector
 
 Select values from deeply nested/complex hashes with ease.
