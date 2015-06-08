@@ -9,6 +9,11 @@ RSpec.describe "HashSelector" do
                    ] },
                  qux: 42 } }
 
+  it "has a useful to_s" do
+    expect( HashSelector.new[:foo].find{true}[:bar].to_s )
+      .to eq "HashSelector.new[:foo].find{...}[:bar]"
+  end
+
   it "can select values from top level" do
     expect(
       HashSelector.new[:qux]
@@ -35,7 +40,7 @@ RSpec.describe "HashSelector" do
 
   it "raise error on a array index miss" do
     expect { HashSelector.new[:foo][:bar][42].find_in(data)
-    }.to raise_error KeyError
+    }.to raise_error KeyError, %r/\[:foo\]\[:bar\]\[42\]/
   end
 
   it "returns value of default value block a array index miss" do
@@ -61,7 +66,7 @@ RSpec.describe "HashSelector" do
     expect {
       HashSelector.new[:foo][:bar].detect{|it| it[:name] == "mallory"}
         .find_in(data)
-    }.to raise_error KeyError
+    }.to raise_error KeyError, %r/\[:foo\]\[:bar\].find{...}/
   end
 
   it "returns value of default value block on a #find/#detect miss" do

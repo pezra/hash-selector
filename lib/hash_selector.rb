@@ -21,7 +21,8 @@ class HashSelector
                                  rescue IndexError
                                    raise KeyError
                                  end
-                               } ]
+                               } ],
+                     desc + "[#{key.inspect}]"
   end
 
   # Returns a new selector that selects an entry from the result of the current
@@ -34,29 +35,36 @@ class HashSelector
                                    else
                                      needle
                                    end
-                               } ]
+                               } ],
+                     desc + ".find{...}"
   end
   alias_method :detect, :find
 
   # Returns the value from a hash at the location specified by this selector.
   def find_in(hay_stack)
-    steps.reduce(hay_stack) { |search_area, step| step.call(search_area) }
+    idx = 0
+    steps.reduce(hay_stack) { |search_area, step| idx +=1; step.call(search_area) }
 
   rescue KeyError
     if block_given?
       yield hay_stack
     else
-      raise
+      raise KeyError, "step #{idx} of #{self} failed to match"
     end
+  end
+
+  def to_s
+    desc
   end
 
   protected
 
   MISSING = Object.new
 
-  def initialize(steps = [])
+  def initialize(steps = [], desc="HashSelector.new")
     @steps = steps
+    @desc = desc
   end
 
-  attr_reader :steps
+  attr_reader :steps, :desc
 end
